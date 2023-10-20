@@ -62,4 +62,10 @@ public class ContractService {
         contract.setIsDone(true);
         contractRepository.save(contract);
     }
+
+    public void setNewForeman(Long id, Employee employee) {
+        Contract contract = getContractById(id);
+        contract.setEmployee(employee);
+        contractRepository.save(contract);
+    }
 }

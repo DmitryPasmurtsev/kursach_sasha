@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -27,6 +29,7 @@ public class EmployeeService {
     }
     public void saveEmployee(Employee employee) {
         log.info("Saving new Employee.{}",employee);
+        employee.setDate(LocalDate.now());
         employee.setPosition(new Position());
         employee.getPosition().setId(2L);
         employeeRepository.save(employee);
@@ -59,9 +62,19 @@ public class EmployeeService {
         employee.setContracts(deprecatedEmployee.getContracts());
         employee.setUser(deprecatedEmployee.getUser());
         employee.setPosition(deprecatedEmployee.getPosition());
+        employee.setImage_bytes(deprecatedEmployee.getImage_bytes());
         employeeRepository.save(employee);
     }
     public List<Employee> listForemen() {
         return employeeRepository.findByPosition_Name(Role.ROLE_FOREMAN.name);
     }
+
+    public List<Employee> listEmployeesSortedByExperience(String fullName) {
+        return employeeRepository.findByNameContainingOrderByExperienceDesc(fullName);
+    }
+
+    public Employee getByEmail(String email) {
+       return employeeRepository.findByEmail(email);
+    }
+
 }

@@ -37,14 +37,14 @@
 <b>Опыт работы </b>${employee.experience}<br>
 <b>Электронная почта </b>${employee.email}<br>
 <b>Номер телефона </b>${employee.phone}<br>
+<b>Дата приема на работу </b>${employee.date}<br>
 <#if employee.user?? && employee.user.isForeman()><b>Количество выполненных работ </b>${employee.amountOfDoneContracts()}<br></#if>
 <br>
 <#if !(user.isForeman() && (user.employee.id !=employee.id))>
     <a href="/employees/edit/${employee.id}">Редактирование информации</a>
 </#if>
 <hr>
-//сюда надо дописать проверку, чтобы нельзя было удалить работника с невыполенными договорами
-<#if user.isDirector() && employee.user?? && employee.user.isForeman()>
+<#if user.isDirector() && !employee.isOutstandingContracts() && !(employee.email == user.email)>
 <h3>Удаление работника</h3>
 <form action="/employees/delete/${employee.id}" method="post" enctype="multipart/form-data">
     <input type="hidden" name="_csrf" value="${_csrf.token}">

@@ -73,6 +73,18 @@
             <input style="color:green" type="submit" value="Выполнено"/>
         </form><br>
 </#if>
+    <#if user.isDirector() && !contract.employee??>
+        <form action="/contracts/${contract.id}/addForeman" method="post" enctype="multipart/form-data">
+            Назначить бригадира <select required name="employeeId">
+                <option value="">Выберите бригадира</option>
+                <#list foremen as foreman>
+                    <option value="${foreman.id}">${foreman.name}</option>
+                </#list>
+            </select><br><br>
+            <input type="hidden" name="_csrf" value="${_csrf.token}">
+            <input type="submit" value="Назначить"/>
+        </form>
+    </#if>
 </#if>
 </body>
 </html>

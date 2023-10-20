@@ -42,11 +42,13 @@ public class ContractController {
 
     @GetMapping("/{id}")
     public String contractInfo(@PathVariable Long id,@RequestParam(name = "materialName",required = false) String materialName, Model model){
-        String searchString = "";
-        if (materialName != null) searchString =materialName;
+        String searchString;
+        if(materialName == null) searchString = "";
+        else searchString = materialName;
         Contract contract = contractService.getContractById(id);
         model.addAttribute("user", appController.user);
         model.addAttribute("contract",contract);
+        model.addAttribute("foremen", employeeService.listForemen());
         model.addAttribute("searchString", searchString);
         model.addAttribute("materials", materialService.listMaterials(materialName));
         return "contract-info";
@@ -84,6 +86,13 @@ public class ContractController {
     @PreAuthorize("hasAnyAuthority('ROLE_FOREMAN')")
     public String changeStatus(@PathVariable Long id) {
         contractService.changeContractStatus(id);
+        return "redirect:/contracts/" + id;
+    }
+
+    @PostMapping("/{id}/addForeman")
+    @PreAuthorize("hasAnyAuthority('ROLE_DIRECTOR')")
+    public String addNewForeman(@PathVariable Long id, Long employeeId) {
+        contractService.setNewForeman(id, employeeService.getEmployeeById(employeeId));
         return "redirect:/contracts/" + id;
     }
 

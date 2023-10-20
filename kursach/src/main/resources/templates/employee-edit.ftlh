@@ -13,6 +13,22 @@
             transition: background-color 0.3s ease;
         }
     </style>
+    <script>
+        function validateEmailAndSubmit() {
+            var email = document.getElementById("email").value;
+            const url = "/isEmailUnique?email=" + email;
+            fetch(url)
+                .then(
+                    response => response.text()
+                )
+                .then(
+                    text => {
+                        if (text === "false") document.getElementById("error-message").innerHTML = "<p style='color: red'>Электронная почта должна быть уникальной</p>";
+                        else document.getElementById("form").submit();
+                    }
+                );
+        }
+    </script>
 </head>
 <body>
 <h1>Ремонт, Строительство и Ко</h1><hr>
@@ -40,19 +56,20 @@
             <input type="submit" value="Добавить фото"/>
         </form><br>
 </#if>
-<form action="/employees/editing" method="post" enctype="multipart/form-data">
+<form action="/employees/editing" method="post" id="form" enctype="multipart/form-data" onsubmit="validateEmailAndSubmit()">
     ФИО <input type="text" value="${employee.name}" size="40" name="name"/><br><br>
     <#if user.isDirector()>
     Опыт работы <input type="number" value="${employee.experience}" min="0" name="experience"/><br><br>
         <#else>
             <input type="hidden" name="experience" value="${employee.experience}">
     </#if>
-    Электронная почта <input type="email" value="${employee.email}"  name="email"/><br><br>
+    Электронная почта <input type="email" id="email" value="${employee.email}"  name="email"/><br>
+    <div id="error-message"></div><br>
     Номер телефона <input type="text" value="${employee.phone}" maxlength="13" minlength="11" name="phone"/><br><br>
     <input type="hidden" value="${employee.date}" name="date"/><br><br>
     <input type="hidden" value="${employee.id}" name="id">
     <input type="hidden" name="_csrf" value="${_csrf.token}">
-    <input type="submit" value="Изменить информацию"/>
+    <input type="button" onclick="validateEmailAndSubmit()" value="Изменить информацию"/>
 </form>
 </body>
 </html>

@@ -48,8 +48,8 @@
         Описание <input type="text" required size="40" name="description"/><br><br>
         Заказчик <input type="text" required size="40" name="clientName"/><br><br>
         Номер телефона заказчика <input type="text" required maxlength="13" minlength="11" name="clientPhone"/><br><br>
-        Дата заключения <input type="date" id="conclusion" required name="conclusion"/><br><br>
-        Дата выполнения <input type="date" id="completion" required onclick="getMinCompletionDate()" name="completion"/><br><br>
+        Дата заключения <input type="date" id="conclusion" required name="conclusion" onchange="setMinCompletionDate()"/><br><br>
+        Дата выполнения <input type="date" id="completion" required name="completion"/><br><br>
         Начальная стоимость работ <input type="number" required step="0.01" name="price" руб./><br><br>
         Бригадир <select required name="employee">
             <option value="">Выберите бригадира</option>

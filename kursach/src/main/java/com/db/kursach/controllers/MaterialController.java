@@ -20,15 +20,14 @@ public class MaterialController {
 
     @GetMapping
     public String materials(@RequestParam(required = false) String name,@RequestParam(required = false) Boolean sortedByPrice , Model model){
-        if(sortedByPrice != null && sortedByPrice) model.addAttribute("materials", materialService.getMaterialSortedByPrice(name));
+        if(sortedByPrice == null) sortedByPrice = false;
+        if(sortedByPrice) model.addAttribute("materials", materialService.getMaterialSortedByPrice(name));
         else model.addAttribute("materials", materialService.listMaterials(name));
         String searchString = "";
         if (name != null) searchString = name;
-        boolean sorted = false;
-        if (sortedByPrice != null && sortedByPrice) sorted = true;
         model.addAttribute("user", appController.user);
         model.addAttribute("searchString", searchString);
-        model.addAttribute("sortedByPrice", sorted);
+        model.addAttribute("sortedByPrice", sortedByPrice);
         return "materials";
     }
 

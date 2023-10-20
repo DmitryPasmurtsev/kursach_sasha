@@ -27,6 +27,10 @@ public class SecurityConfig{
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
+                .requestMatchers("/isEmailUnique")
+                .permitAll()
+                .and()
+                .authorizeRequests()
                 .requestMatchers("/**")
                 .permitAll()
                 .anyRequest().authenticated()

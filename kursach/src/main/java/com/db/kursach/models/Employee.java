@@ -34,6 +34,7 @@ public class Employee {
     @Column(name = "employment_date")
     private LocalDate date;
     @Lob
+    @Column(name = "image_bytes", columnDefinition = "longblob")
     private byte[] image_bytes;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -46,8 +47,14 @@ public class Employee {
     @OneToOne(mappedBy = "employee", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private User user;
 
-    public String amountOfDoneContracts() {
-        if (contracts == null) return "0";
-        return ""+contracts.stream().filter(Contract::getIsDone).toList().size();
+    public int amountOfDoneContracts() {
+        if (contracts == null) return 0;
+        return contracts.stream().filter(Contract::getIsDone).toList().size();
+    }
+
+    public boolean isOutstandingContracts() {
+        if(contracts == null) return false;
+        if(contracts.size() - amountOfDoneContracts() > 0) return true;
+        return false;
     }
 }

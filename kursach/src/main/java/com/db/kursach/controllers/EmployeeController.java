@@ -30,14 +30,18 @@ public class EmployeeController {
     private final AppController appController;
     private final UserService userService;
     @GetMapping
-    public String employees(@RequestParam(name = "fullName",required = false) String fullName, Model model){
-        model.addAttribute("employees",employeeService.listEmployees(fullName));
+    public String employees(@RequestParam(name = "fullName",required = false) String fullName,@RequestParam(required = false) Boolean sortedByExperience, Model model){
+        if(sortedByExperience == null) sortedByExperience = false;
+        if(sortedByExperience) model.addAttribute("employees",employeeService.listEmployeesSortedByExperience(fullName));
+        else model.addAttribute("employees",employeeService.listEmployees(fullName));
         String searchString = "";
         if (fullName != null) searchString =fullName;
         model.addAttribute("user",appController.user);
         model.addAttribute("searchString", searchString);
+        model.addAttribute("sortedByExperience", sortedByExperience);
         return "employees";
     }
+
     @PreAuthorize("hasAnyAuthority('ROLE_DIRECTOR')")
     @PostMapping("/create")
     public String createEmployee(Employee employee) throws IOException{
@@ -95,5 +99,7 @@ public class EmployeeController {
         employeeService.editEmployee(employee);
         return "redirect:/employees/" + employee.getId();
     }
+
+
 
 }
